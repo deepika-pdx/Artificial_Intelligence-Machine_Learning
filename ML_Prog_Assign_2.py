@@ -4,7 +4,7 @@ from math import sqrt
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-input_data = np.loadtxt('/Test_Data/spambase.data', delimiter=',', dtype=float)
+input_data = np.loadtxt('Spambase_Dataset/spambase.data', delimiter=',', dtype=float)
 samples, target = input_data[:, :-1], input_data[:, -1]
 
 # Splitting the dataset into training and test data
