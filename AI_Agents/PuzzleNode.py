@@ -4,7 +4,7 @@ from functools import total_ordering
 
 @total_ordering
 class PuzzleNode:
-    def __init__(self, state, parent, action, path_cost):
+    def __init__(self, state, parent, action, path_cost=0):
         self.state = state
         self.parent = parent
         self.action = action

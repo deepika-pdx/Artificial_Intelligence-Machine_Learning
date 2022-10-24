@@ -6,7 +6,7 @@ from AI_Agents.PuzzleHeuristics import PuzzleHeuristics
 from AI_Agents.PuzzleNode import PuzzleNode
 
 
-class GreedyBestFirstSearch(BestFirstSearch):
+class AStarBestFirstSearch(BestFirstSearch):
 
     def expand(self, node, frontier_queue, heuristic):
         self.reached_dict.update({str(node.state): node})
@@ -23,12 +23,13 @@ class GreedyBestFirstSearch(BestFirstSearch):
                             new_node_state_left[i][j - 1] = 'b'
                             new_node_state_left[i][j] = temp
 
-                            new_node_left = PuzzleNode(new_node_state_left, node, action)
+                            left_node_path_cost = node.path_cost + 1
+                            new_node_left = PuzzleNode(new_node_state_left, node, action, left_node_path_cost)
                             new_node_heuristic_left = PuzzleHeuristics(new_node_state_left, self.goal_state)
                             if heuristic == "1":
-                                new_node_evaluation_fn_left = new_node_heuristic_left.no_of_misplaced_tiles()
+                                new_node_evaluation_fn_left = left_node_path_cost + new_node_heuristic_left.no_of_misplaced_tiles()
                             elif heuristic == "2":
-                                new_node_evaluation_fn_left = new_node_heuristic_left.sum_of_tile_manhatten_distances()
+                                new_node_evaluation_fn_left = left_node_path_cost + new_node_heuristic_left.sum_of_tile_manhatten_distances()
                             elif heuristic == "3":
                                 misplaced_tiles_count_left = new_node_heuristic_left.no_of_misplaced_tiles()
                                 tiles_m_distance_left = new_node_heuristic_left.sum_of_tile_manhatten_distances()
@@ -49,12 +50,13 @@ class GreedyBestFirstSearch(BestFirstSearch):
                             new_node_state_right[i][j + 1] = 'b'
                             new_node_state_right[i][j] = temp
 
-                            new_node_right = PuzzleNode(new_node_state_right, node, action)
+                            right_node_path_cost = node.path_cost + 1
+                            new_node_right = PuzzleNode(new_node_state_right, node, action, right_node_path_cost)
                             new_node_heuristic_right = PuzzleHeuristics(new_node_state_right, self.goal_state)
                             if heuristic == "1":
-                                new_node_evaluation_fn_rt = new_node_heuristic_right.no_of_misplaced_tiles()
+                                new_node_evaluation_fn_rt = right_node_path_cost + new_node_heuristic_right.no_of_misplaced_tiles()
                             elif heuristic == "2":
-                                new_node_evaluation_fn_rt = new_node_heuristic_right.sum_of_tile_manhatten_distances()
+                                new_node_evaluation_fn_rt = right_node_path_cost + new_node_heuristic_right.sum_of_tile_manhatten_distances()
                             elif heuristic == "3":
                                 misplaced_tiles_count_rt = new_node_heuristic_right.no_of_misplaced_tiles()
                                 tiles_m_distance_rt = new_node_heuristic_right.sum_of_tile_manhatten_distances()
@@ -75,12 +77,13 @@ class GreedyBestFirstSearch(BestFirstSearch):
                             new_node_state_up[i - 1][j] = 'b'
                             new_node_state_up[i][j] = temp
 
-                            new_node_up = PuzzleNode(new_node_state_up, node, action)
+                            up_node_path_cost = node.path_cost + 1
+                            new_node_up = PuzzleNode(new_node_state_up, node, action, up_node_path_cost)
                             new_node_heuristic_up = PuzzleHeuristics(new_node_state_up, self.goal_state)
                             if heuristic == "1":
-                                new_node_evaluation_fn_up = new_node_heuristic_up.no_of_misplaced_tiles()
+                                new_node_evaluation_fn_up = up_node_path_cost + new_node_heuristic_up.no_of_misplaced_tiles()
                             elif heuristic == "2":
-                                new_node_evaluation_fn_up = new_node_heuristic_up.sum_of_tile_manhatten_distances()
+                                new_node_evaluation_fn_up = up_node_path_cost + new_node_heuristic_up.sum_of_tile_manhatten_distances()
                             elif heuristic == "3":
                                 misplaced_tiles_count_up = new_node_heuristic_up.no_of_misplaced_tiles()
                                 tiles_m_distance_up = new_node_heuristic_up.sum_of_tile_manhatten_distances()
@@ -101,12 +104,14 @@ class GreedyBestFirstSearch(BestFirstSearch):
                             new_node_state_down[i + 1][j] = 'b'
                             new_node_state_down[i][j] = temp
 
-                            new_node_down = PuzzleNode(new_node_state_down, node, action)
+                            down_node_path_cost = node.path_cost + 1
+                            new_node_down = PuzzleNode(new_node_state_down, node, action, down_node_path_cost)
                             new_node_heuristic_down = PuzzleHeuristics(new_node_state_down, self.goal_state)
                             if heuristic == "1":
-                                new_node_evaluation_fn_down = new_node_heuristic_down.no_of_misplaced_tiles()
+                                mis = new_node_heuristic_down.no_of_misplaced_tiles()
+                                new_node_evaluation_fn_down = down_node_path_cost + new_node_heuristic_down.no_of_misplaced_tiles()
                             elif heuristic == "2":
-                                new_node_evaluation_fn_down = new_node_heuristic_down.sum_of_tile_manhatten_distances()
+                                new_node_evaluation_fn_down = down_node_path_cost + new_node_heuristic_down.sum_of_tile_manhatten_distances()
                             elif heuristic == "3":
                                 misplaced_tiles_count_down = new_node_heuristic_down.no_of_misplaced_tiles()
                                 tiles_m_distance_down = new_node_heuristic_down.sum_of_tile_manhatten_distances()
@@ -119,13 +124,14 @@ class GreedyBestFirstSearch(BestFirstSearch):
                         break
 
     def find_solution_using_heuristic(self, heuristic):
-        puzzle_initial_node = PuzzleNode(self.initial_state, "", "")
+        path_cost = 0
+        puzzle_initial_node = PuzzleNode(self.initial_state, "", "", path_cost)
         puzzle_heuristic = PuzzleHeuristics(puzzle_initial_node.state, self.goal_state)
 
         if heuristic == "1":
-            queue_key = puzzle_heuristic.no_of_misplaced_tiles()
+            queue_key = path_cost + puzzle_heuristic.no_of_misplaced_tiles()
         elif heuristic == "2":
-            queue_key = puzzle_heuristic.sum_of_tile_manhatten_distances()
+            queue_key = path_cost + puzzle_heuristic.sum_of_tile_manhatten_distances()
         elif heuristic == "3":
             misplaced_tiles_count = puzzle_heuristic.no_of_misplaced_tiles()
             tiles_m_distance = puzzle_heuristic.sum_of_tile_manhatten_distances()
@@ -145,8 +151,9 @@ class GreedyBestFirstSearch(BestFirstSearch):
             # it holds the sum of manhatten distances of the tiles when using heuristis 2
             heuristic_measure = node_tuple[0]
             node = node_tuple[1]
-
-            if heuristic_measure == 0:
+            no_of_moves += 1
+            goal_state_string = str(self.goal_state)
+            if state_string == goal_state_string:
                 solution_path, no_of_steps = super().generate_solution_path(node)
                 break
             else:

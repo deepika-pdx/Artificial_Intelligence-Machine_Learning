@@ -28,18 +28,41 @@ def generate_random_8_puzzle():
     return puzzle
 
 
-def find_reachable_initial_state(final_state):
+def generate_random_15_puzzle():
+    puzzle = []
+    number_array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 'b']
+    n = 15
+    for i in range(4):
+        puzzle.append([])
+        for j in range(1, 5):
+            tile_number = generate_random_tile_number(number_array, n)
+            puzzle[i].append(tile_number)
+            number_array.remove(tile_number)
+            n -= 1
+    print(puzzle)
+    return puzzle
+
+
+def find_reachable_initial_state(final_state, puzzle_size):
     are_puzzles_states_reachable = False
 
     while not are_puzzles_states_reachable:
-        sample_initial_state = generate_random_8_puzzle()
+        if puzzle_size == 8:
+            sample_initial_state = generate_random_8_puzzle()
+        elif puzzle_size == 15:
+            sample_initial_state = generate_random_15_puzzle()
         puzzle_parity = PuzzleParityCheck(sample_initial_state, final_state)
         are_puzzles_states_reachable = puzzle_parity.compare_puzzle_parity()
 
     return sample_initial_state
 
 
-goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 'b']]
+input_puzzle_size = 15
+if input_puzzle_size == 8:
+    goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 'b']]
+elif input_puzzle_size == 15:
+    goal_state = [[1, 2, 3, 4], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15, 'b']]
+
 heuristics = ["1", "2", "3"]
 # Heuristic "1" : No of misplaced tiles
 # Heuristic "2" : Sum of Manhatten distances of each tile
@@ -53,7 +76,7 @@ for p_heuristic in heuristics:
     path_steps_array_star_bfs = []
 
     for k in range(5):
-        initial_state = find_reachable_initial_state(goal_state)
+        initial_state = find_reachable_initial_state(goal_state, input_puzzle_size)
         heuristic = p_heuristic
 
         # Execute Greedy Best First Search Algorithm using heuristic
