@@ -145,8 +145,8 @@ if __name__ == '__main__':
     x_axis = []
     y_axis = []
     for iteration in range(no_of_iterations):
-        # Select the pair of individuals with the highest normalised fitness function value and perform crossover
-        # and add the children back to the population
+        # Select the pair of individuals based on normalised fitness function value and perform crossover
+        # and generate enough children for the next generation
         eight_queens.perform_crossover()
 
         x_axis.append(iteration)
