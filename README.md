@@ -1,2 +1,2 @@
-# Machine_Learning
-Machine Learning Projects
+# Artificial Intelligence/ Machine_Learning
+Artificial Intelligence & Machine Learning Assignments
